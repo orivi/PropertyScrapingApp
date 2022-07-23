@@ -3,6 +3,7 @@ import sqlite3
 def conn(list):
     conn=sqlite3.connect("properties.db")
     cur=conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS property")
     cur.execute("CREATE TABLE IF NOT EXISTS property (id INTEGER PRIMARY KEY,location TEXT, price INTEGER, size TEXT)")
     for dict in list:
         if type(dict["price"]) is None:
@@ -16,29 +17,8 @@ def conn(list):
 
     conn.commit()
     conn.close
-
-#inserts all the properties
-
-def viewAll():
-    conn=sqlite3.connect("properties.db")
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM property")
-    rows=cur.fetchall()
-    conn.close()
-    return rows
     
-def search(location=""):
-    conn=sqlite3.connect("properties.db")
-    cur = conn.cursor()
-    if location == "":
-        cur.execute("SELECT * FROM property")
-    else:
-        cur.execute("SELECT * FROM property WHERE location=?",(location,))
-    rows=cur.fetchall()
-    conn.close()
-    return rows
-    
-def filter(dmin,dmax):
+def search(location,dmin,dmax):
     conn=sqlite3.connect("properties.db")
     cur = conn.cursor()
     try:
@@ -49,9 +29,18 @@ def filter(dmin,dmax):
         max = int(dmax)
     except:
         max = 100000
-    cur.execute("SELECT * FROM property WHERE price BETWEEN ? AND ?",(min,max))
+    
+    #both categories unfilled / price filled
+    if location == "":
+        cur.execute("SELECT * FROM property WHERE price BETWEEN ? AND ?",(min,max))
+    #both categories filled
+    else:
+        cur.execute("SELECT * FROM property WHERE location=? AND price BETWEEN ? AND ?",(location,min,max))
+
     rows=cur.fetchall()
     conn.close()
     return rows
+
+
     
 
