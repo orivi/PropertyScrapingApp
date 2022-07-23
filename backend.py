@@ -29,13 +29,13 @@ def search(location,dmin,dmax):
         max = int(dmax)
     except:
         max = 100000
-    
+    non = "neuvedena"
     #both categories unfilled / price filled
     if location == "":
-        cur.execute("SELECT * FROM property WHERE price BETWEEN ? AND ?",(min,max))
+        cur.execute("SELECT * FROM property WHERE price BETWEEN ? AND ? OR price = ?",(min,max,non))
     #both categories filled
     else:
-        cur.execute("SELECT * FROM property WHERE location=? AND price BETWEEN ? AND ?",(location,min,max))
+        cur.execute("SELECT * FROM property WHERE location=? AND price BETWEEN ? AND ? or price = ?",(location,min,max,non))
 
     rows=cur.fetchall()
     conn.close()
