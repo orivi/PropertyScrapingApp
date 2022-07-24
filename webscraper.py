@@ -24,6 +24,10 @@ def scrape():
             for item in tile:
                 d = {}
                 try:
+                    d["link"] = "https://www.ereality.cz" + item.find("a", {"class": "ereality-property-image"})["href"]
+                except:
+                    d["link"] = None
+                try:
                     heading = item.find(
                         "strong", {"class": "ereality-property-heading"}).text.split(",")[0:1]
                 except:
@@ -45,6 +49,7 @@ def scrape():
 
                     else:
                         d["size"] = "house"
+                
                 l.append(d)
     return l
 

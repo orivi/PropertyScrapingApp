@@ -1,6 +1,8 @@
 import tkinter as tk
 import backend
 import webscraper
+import webbrowser
+import sqlite3
 
 def box_search():
     listBox.delete(0,tk.END)
@@ -10,7 +12,17 @@ def box_search():
 def close():
     root.destroy()
     root.quit()
-    
+
+def goto(*args):
+    index = listBox.curselection()[0]
+    item = listBox.get(index)
+    conn=sqlite3.connect("properties.db")
+    cur = conn.cursor()
+    cur.execute("SELECT link FROM property WHERE id = ?",(str(item[0])))
+    for item in cur.fetchall():
+        for link in item:
+            webbrowser.open_new(link)
+
 root = tk.Tk()
 
 backend.conn(webscraper.scrape())
@@ -44,6 +56,7 @@ e3.grid(row=1, column=3)
 
 listBox = tk.Listbox(root, height=6, width=45)
 listBox.grid(row=2, column=0, rowspan=4, columnspan=6)
+listBox.bind('<<ListboxSelect>>', goto)
 
 scrollBar = tk.Scrollbar(root)
 scrollBar.grid(row=2, column=5, columnspan=2)
