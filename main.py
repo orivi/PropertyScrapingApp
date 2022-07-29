@@ -6,8 +6,8 @@ import sqlite3
 
 def box_search():
     listBox.delete(0,tk.END)
-    for row in backend.search(e1.get(),e2.get(),e3.get()):
-        listBox.insert(tk.END, row)
+    for row in backend.viewAll(e1.get(),e2.get(),e3.get()):
+        listBox.insert(tk.END, f"{row[0]}| {row[1]} {row[2]} {row[3].strip()} ")
         
 def close():
     root.destroy()

@@ -52,4 +52,3 @@ def scrape():
                 
                 l.append(d)
     return l
-
